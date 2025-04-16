@@ -83,12 +83,19 @@ function predictWebcam() {
         const timestamp = new Date().toLocaleTimeString();
 
         const logLine = `[${timestamp}] ${predictions[n].class} (${Math.round(predictions[n].score * 100)}%)`;
-        logContainer.textContent += logLine + '\n';
+
+        logContainer.innerHTML += `<div>${logLine}</div>`;
 
         const lines = logContainer.textContent.trim().split('\n');
-        if (lines.length > 100) {
-        logContainer.textContent = lines.slice(-100).join('\n') + '\n';
+        if (lines.length > 27) {
+            logContainer.textContent = lines.slice(-27).join('\n') + '\n';
         }
+
+        const logLines = logContainer.querySelectorAll('div');
+             if (logLines.length > 27) {
+         logLines[0].remove(); 
+        }
+
         p.innerText = predictions[n].class  + ' - with ' 
             + Math.round(parseFloat(predictions[n].score) * 100) 
             + '% confidence.';

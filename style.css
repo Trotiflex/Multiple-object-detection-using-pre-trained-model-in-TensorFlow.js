@@ -14,6 +14,8 @@ body {
   
   video {
     display: block;
+    border-radius: 5px;
+    overflow: hidden;
   }
 
   button {
@@ -54,10 +56,12 @@ body {
     color: #FFF;
     border: 1px dashed #5A4282;
     z-index: 2;
+    border-radius: 5px 5px 0 0;
     font-size: 12px;
   }
   
   .highlighter {
+    border-radius: 5px;
     background: #8A74AF40;
     border: 1px dashed #5A4282;
     z-index: 1;
@@ -74,38 +78,38 @@ body {
     box-sizing: border-box;
   }
   
-  .imageContainer {
-    width: 45%;
-    max-width: 100%;
-    height: 480px;
-    overflow: hidden;
-  }
-  
-  .imageContainer img {
-    width: 100%;
-    height: auto;
-    transform: translateY(-80px);
-    display: block;
-  }
 
-  /* Conteneur avec scroll */
-.logBox {
-    margin-top: 10px;
-    max-height: 200px;
+ 
+  .logBox {
+    max-height: 460px;
     overflow-y: auto;
-    background-color: #1e1e1e;
-    color: #7B5DAC;
-    font-family: monospace;
     padding: 10px;
+    background-image: url("fantominus.webp");
+    background-size: cover;
+    background-position: center;
+    color: #a489cf;
+    font-family: monospace;
+    font-size: 14px;
+    border: 1px solid #5A4282;
     border-radius: 5px;
-    width: 47%;
-    border: 2px solid #5A4282;
-    white-space: pre-wrap;
-    scrollbar-width: thin;
-    scrollbar-color: #5A4282 #2e2e2e; 
+    width: 550px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
   }
   
- 
+  .logBox::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  
+  .logBox {
+    position: relative;
+    z-index: 1;
+  }
   .logBox::-webkit-scrollbar {
     width: 10px;
   }
