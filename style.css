@@ -88,3 +88,40 @@ body {
     display: block;
   }
 
+  /* Conteneur avec scroll */
+.logBox {
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    color: #7B5DAC;
+    font-family: monospace;
+    padding: 10px;
+    border-radius: 5px;
+    width: 47%;
+    border: 2px solid #5A4282;
+    white-space: pre-wrap;
+    scrollbar-width: thin;
+    scrollbar-color: #5A4282 #2e2e2e; 
+  }
+  
+ 
+  .logBox::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .logBox::-webkit-scrollbar-track {
+    background: #2e2e2e;
+    border-radius: 5px;
+  }
+  
+  .logBox::-webkit-scrollbar-thumb {
+    background-color: #5A4282;
+    border-radius: 5px;
+    border: 2px solid #2e2e2e;
+  }
+  
+  .logBox::-webkit-scrollbar-thumb:hover {
+    background-color: #5A4282;
+  }
+

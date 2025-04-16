@@ -79,6 +79,16 @@ function predictWebcam() {
       // If we are over 66% sure we are sure we classified it right, draw it!
       if (predictions[n].score > 0.4) {
         const p = document.createElement('p');
+        const logContainer = document.getElementById('logContainer');
+        const timestamp = new Date().toLocaleTimeString();
+
+        const logLine = `[${timestamp}] ${predictions[n].class} (${Math.round(predictions[n].score * 100)}%)`;
+        logContainer.textContent += logLine + '\n';
+
+        const lines = logContainer.textContent.trim().split('\n');
+        if (lines.length > 100) {
+        logContainer.textContent = lines.slice(-100).join('\n') + '\n';
+        }
         p.innerText = predictions[n].class  + ' - with ' 
             + Math.round(parseFloat(predictions[n].score) * 100) 
             + '% confidence.';
@@ -97,6 +107,7 @@ function predictWebcam() {
         liveView.appendChild(p);
         children.push(highlighter);
         children.push(p);
+
       }
     }
     
