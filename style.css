@@ -1,0 +1,90 @@
+
+
+body {
+    font-family: helvetica, arial, sans-serif;
+    margin: 1em;
+    color: #FFF;
+    background-color: #3D3D3D;
+  }
+  
+  h1 {
+    font-style: italic;
+    color: #7B5DAC;
+  }
+  
+  video {
+    display: block;
+  }
+
+  button {
+    background-color: #7B5DAC;
+    color: #FFF;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-color: #5A4282;
+  }
+  
+  section {
+    opacity: 1;
+    transition: opacity 500ms ease-in-out;
+  }
+
+  .removed {
+    display: none;
+  }
+  
+  .invisible {
+    opacity: 0.2;
+  }
+  
+
+  .camView {
+    position: relative;
+    width: 65%;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  
+  
+  .camView p {
+    position: absolute;
+    padding: 5px;
+    background-color: #7B5DAC;
+    color: #FFF;
+    border: 1px dashed #5A4282;
+    z-index: 2;
+    font-size: 12px;
+  }
+  
+  .highlighter {
+    background: #8A74AF40;
+    border: 1px dashed #5A4282;
+    z-index: 1;
+    position: absolute;
+  }
+
+  .camWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 470px;
+    box-sizing: border-box;
+  }
+  
+  .imageContainer {
+    width: 45%;
+    max-width: 100%;
+    height: 480px;
+    overflow: hidden;
+  }
+  
+  .imageContainer img {
+    width: 100%;
+    height: auto;
+    transform: translateY(-80px);
+    display: block;
+  }
+
