@@ -5,120 +5,116 @@ const enableWebcamButton = document.getElementById('webcamButton');
 
 // Check if webcam access is supported.
 function getUserMediaSupported() {
-    return !!(navigator.mediaDevices &&
-      navigator.mediaDevices.getUserMedia);
-  }
-  
-  // If webcam supported, add event listener to button for when user
-  // wants to activate it to call enableCam function which we will 
-  // define in the next step.
-  if (getUserMediaSupported()) {
-    enableWebcamButton.addEventListener('click', enableCam);
-  } else {
-    console.warn('getUserMedia() is not supported by your browser');
-  }
-  
-  // Placeholder function for next step. Paste over this in the next step.
-  function enableCam(event) {
-  }
-
-  // Enable the live webcam view and start classification.
-function enableCam(event) {
-    // Only continue if the COCO-SSD has finished loading.
-    if (!model) {
-      return;
-    }
-    
-    // Hide the button once clicked.
-    event.target.classList.add('removed');  
-    
-    // getUsermedia parameters to force video but not audio.
-    const constraints = {
-      video: true
-    };
-  
-    // Activate the webcam stream.
-    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-      video.srcObject = stream;
-      video.addEventListener('loadeddata', predictWebcam);
-    });
-  }
-
-  // Placeholder function for next step.
-function predictWebcam() {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
 
-// Store the resulting model in the global scope of our app.
+// Enable webcam button event listener
+if (getUserMediaSupported()) {
+    enableWebcamButton.addEventListener('click', enableCam);
+} else {
+    console.warn('getUserMedia() is not supported by your browser');
+}
+
+// Enable the live webcam view and start classification.
+function enableCam(event) {
+    if (!model) {
+        return;
+    }
+    
+    event.target.classList.add('removed');  
+    
+    const constraints = {
+        video: true
+    };
+  
+    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+        video.srcObject = stream;
+        video.addEventListener('loadeddata', predictWebcam);
+    });
+}
+
+// Store the resulting model in the global scope
 var model = undefined;
 
-// Before we can use COCO-SSD class we must wait for it to finish
-// loading. Machine Learning models can be large and take a moment 
-// to get everything needed to run.
-// Note: cocoSsd is an external object loaded from our index.html
-// script tag import so ignore any warning in Glitch.
 cocoSsd.load().then(function (loadedModel) {
-  model = loadedModel;
-  // Show demo section now model is ready to use.
-  demosSection.classList.remove('invisible');
+    model = loadedModel;
+    demosSection.classList.remove('invisible');
 });
 
 var children = [];
 
 function predictWebcam() {
-  // Now let's start classifying a frame in the stream.
-  model.detect(video).then(function (predictions) {
-    // Remove any highlighting we did previous frame.
+    // Clear previous highlighters
     for (let i = 0; i < children.length; i++) {
-      liveView.removeChild(children[i]);
+        liveView.removeChild(children[i]);
     }
     children.splice(0);
-    
-    // Now lets loop through predictions and draw them to the live view if
-    // they have a high confidence score.
-    for (let n = 0; n < predictions.length; n++) {
-      // If we are over 66% sure we are sure we classified it right, draw it!
-      if (predictions[n].score > 0.4) {
-        const p = document.createElement('p');
+
+    // Detect objects in the current frame
+    model.detect(video).then(function (predictions) {
+        // Get video's displayed dimensions to scale bounding boxes
+        const videoRect = video.getBoundingClientRect();
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+        const scaleX = videoRect.width / videoWidth;
+        const scaleY = videoRect.height / videoHeight;
+
         const logContainer = document.getElementById('logContainer');
         const timestamp = new Date().toLocaleTimeString();
 
-        const logLine = `[${timestamp}] ${predictions[n].class} (${Math.round(predictions[n].score * 100)}%)`;
+        // Process each prediction
+        for (let n = 0; n < predictions.length; n++) {
+            if (predictions[n].score > 0.4) {
+                // Log detection
+                const logLine = `[${timestamp}] ${predictions[n].class} (${Math.round(predictions[n].score * 100)}%)`;
+                const logDiv = document.createElement('div');
+                logDiv.textContent = logLine;
+                logContainer.appendChild(logDiv);
 
-        logContainer.innerHTML += `<div>${logLine}</div>`;
+                // Keep only the last 24 log lines
+                const logLines = logContainer.querySelectorAll('div');
+                if (logLines.length > 24) {
+                    logContainer.removeChild(logLines[0]);
+                }
 
-        const lines = logContainer.textContent.trim().split('\n');
-        if (lines.length > 27) {
-            logContainer.textContent = lines.slice(-27).join('\n') + '\n';
+                // Create a container for each prediction
+                const predictionContainer = document.createElement('div');
+                predictionContainer.classList.add('prediction-container');
+
+                // Create label
+                const p = document.createElement('p');
+                p.innerText = `${predictions[n].class} - with ${Math.round(predictions[n].score * 100)}% confidence.`;
+                
+                // Create highlighter
+                const highlighter = document.createElement('div');
+                highlighter.classList.add('highlighter');
+
+                // Scale and position the highlighter and label
+                const bbox = predictions[n].bbox;
+                const left = bbox[0] * scaleX;
+                const top = bbox[1] * scaleY;
+                const width = bbox[2] * scaleX;
+                const height = bbox[3] * scaleY;
+
+                p.style = `left: ${left}px; top: ${top - 20}px; width: ${width}px;`;
+                highlighter.style = `left: ${left}px; top: ${top}px; width: ${width}px; height: ${height}px;`;
+
+                // Add fade-in effect
+                highlighter.style.opacity = '1';
+                setTimeout(() => {
+                    highlighter.style.opacity = '1';
+                    highlighter.style.transition = 'opacity 200ms ease-in';
+                }, 0);
+
+                // Append to container
+                predictionContainer.appendChild(highlighter);
+                predictionContainer.appendChild(p);
+                liveView.appendChild(predictionContainer);
+                children.push(predictionContainer);
+            }
         }
 
-        const logLines = logContainer.querySelectorAll('div');
-             if (logLines.length > 27) {
-         logLines[0].remove(); 
-        }
-
-        p.innerText = predictions[n].class  + ' - with ' 
-            + Math.round(parseFloat(predictions[n].score) * 100) 
-            + '% confidence.';
-        p.style = 'margin-left: ' + predictions[n].bbox[0] + 'px; margin-top: '
-            + (predictions[n].bbox[1] - 10) + 'px; width: ' 
-            + (predictions[n].bbox[2] - 10) + 'px; top: 0; left: 0;';
-
-        const highlighter = document.createElement('div');
-        highlighter.setAttribute('class', 'highlighter');
-        highlighter.style = 'left: ' + predictions[n].bbox[0] + 'px; top: '
-            + predictions[n].bbox[1] + 'px; width: ' 
-            + predictions[n].bbox[2] + 'px; height: '
-            + predictions[n].bbox[3] + 'px;';
-
-        liveView.appendChild(highlighter);
-        liveView.appendChild(p);
-        children.push(highlighter);
-        children.push(p);
-
-      }
-    }
-    
-    // Call this function again to keep predicting when the browser is ready.
-    window.requestAnimationFrame(predictWebcam);
-  });
+        // Continue predicting
+        window.requestAnimationFrame(predictWebcam);
+    });
 }

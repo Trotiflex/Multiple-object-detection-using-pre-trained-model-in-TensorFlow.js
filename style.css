@@ -1,131 +1,188 @@
-
-
 body {
-    font-family: helvetica, arial, sans-serif;
-    margin: 1em;
-    color: #FFF;
-    background-color: #3D3D3D;
+  font-family: helvetica, arial, sans-serif;
+  margin: 1rem;
+  color: #FFF;
+  background-color: #3D3D3D;
+}
+
+h1 {
+  font-style: italic;
+  color: #7B5DAC;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+video {
+  display: block;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+}
+
+button {
+  background-color: #7B5DAC;
+  color: #FFF;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  border-color: #5A4282;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+section {
+  opacity: 1;
+  transition: opacity 500ms ease-in-out;
+}
+
+.removed {
+  display: none;
+}
+
+.invisible {
+  opacity: 0.2;
+}
+
+.camView {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.camView p {
+  position: absolute;
+  padding: 0.5rem;
+  background-color: #7B5DAC;
+  color: #FFF;
+  border: 1px dashed #5A4282;
+  z-index: 2;
+  border-radius: 5px 5px 0 0;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.highlighter {
+  border-radius: 5px;
+  background: #8A74AF40;
+  border: 1px dashed #5A4282;
+  z-index: 1;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.prediction-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.camWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  gap: 1rem;
+}
+
+.logBox {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 1rem;
+  background-image: url("fantominus.webp");
+  background-size: cover;
+  background-position: center;
+  color: #a489cf;
+  font-family: monospace;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  border: 1px solid #5A4282;
+  border-radius: 5px;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.logBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.logBox::-webkit-scrollbar {
+  width: 0.625rem;
+}
+
+.logBox::-webkit-scrollbar-track {
+  background: #2e2e2e;
+  border-radius: 5px;
+}
+
+.logBox::-webkit-scrollbar-thumb {
+  background-color: #5A4282;
+  border-radius: 5px;
+  border: 2px solid #2e2e2e;
+}
+
+.logBox::-webkit-scrollbar-thumb:hover {
+  background-color: #5A4282;
+}
+
+@media (min-width: 768px) {
+  .camWrapper {
+      flex-wrap: nowrap;
   }
-  
+
+  .camView {
+      width: 65%;
+  }
+
+  .logBox {
+      width: 35%;
+      max-height: 460px;
+  }
+}
+
+@media (max-width: 767px) {
+  .camWrapper {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .camView,
+  .logBox {
+      width: 100%;
+  }
+
+  .logBox {
+      max-height: 50vh;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+      margin: 0.5rem;
+  }
+
   h1 {
-    font-style: italic;
-    color: #7B5DAC;
-  }
-  
-  video {
-    display: block;
-    border-radius: 5px;
-    overflow: hidden;
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
   }
 
   button {
-    background-color: #7B5DAC;
-    color: #FFF;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    border-color: #5A4282;
-  }
-  
-  section {
-    opacity: 1;
-    transition: opacity 500ms ease-in-out;
+      padding: 0.4rem 0.8rem;
+      font-size: clamp(0.75rem, 2vw, 0.875rem);
   }
 
-  .removed {
-    display: none;
-  }
-  
-  .invisible {
-    opacity: 0.2;
-  }
-  
-
-  .camView {
-    position: relative;
-    width: 65%;
-    overflow: hidden;
-    max-width: 100%;
-  }
-  
-  
   .camView p {
-    position: absolute;
-    padding: 5px;
-    background-color: #7B5DAC;
-    color: #FFF;
-    border: 1px dashed #5A4282;
-    z-index: 2;
-    border-radius: 5px 5px 0 0;
-    font-size: 12px;
+      font-size: clamp(0.625rem, 1.5vw, 0.75rem);
   }
-  
-  .highlighter {
-    border-radius: 5px;
-    background: #8A74AF40;
-    border: 1px dashed #5A4282;
-    z-index: 1;
-    position: absolute;
-  }
-
-  .camWrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-    width: 100%;
-    height: 470px;
-    box-sizing: border-box;
-  }
-  
-
- 
-  .logBox {
-    max-height: 460px;
-    overflow-y: auto;
-    padding: 10px;
-    background-image: url("fantominus.webp");
-    background-size: cover;
-    background-position: center;
-    color: #a489cf;
-    font-family: monospace;
-    font-size: 14px;
-    border: 1px solid #5A4282;
-    border-radius: 5px;
-    width: 550px;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .logBox::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
-  }
-  
-  .logBox {
-    position: relative;
-    z-index: 1;
-  }
-  .logBox::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  .logBox::-webkit-scrollbar-track {
-    background: #2e2e2e;
-    border-radius: 5px;
-  }
-  
-  .logBox::-webkit-scrollbar-thumb {
-    background-color: #5A4282;
-    border-radius: 5px;
-    border: 2px solid #2e2e2e;
-  }
-  
-  .logBox::-webkit-scrollbar-thumb:hover {
-    background-color: #5A4282;
-  }
-
+}
